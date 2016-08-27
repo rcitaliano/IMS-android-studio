@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">IMS</string>
+    <string name="action_settings">Impostazioni</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="news">News</string>
+    <string name="members">Membri</string>
+    <string name="contacts">Contatti</string>
+    <string name="events">Eventi</string>
+    <string name="singer">cantante</string>
+    <string name="musician">musicista</string>
+    <string name="dancerM">ballerino</string>
+    <string name="dancerF">ballerina</string>
+    <string name="photographerF">fotografo</string>
+    <string name="photographerM">fotografa</string>
+    <string name="programmerM">programmatore</string>
+</resources>
