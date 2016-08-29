@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IMSWeb", "IMSWeb\IMSWeb.csproj", "{DF24F5FD-0E92-426B-A3E0-B5D3E7E22E98}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IMSWeb.Tests", "IMSWeb.Tests\IMSWeb.Tests.csproj", "{48214F02-11BA-4FAD-9D75-6630847F3A9B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DF24F5FD-0E92-426B-A3E0-B5D3E7E22E98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF24F5FD-0E92-426B-A3E0-B5D3E7E22E98}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF24F5FD-0E92-426B-A3E0-B5D3E7E22E98}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF24F5FD-0E92-426B-A3E0-B5D3E7E22E98}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48214F02-11BA-4FAD-9D75-6630847F3A9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48214F02-11BA-4FAD-9D75-6630847F3A9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48214F02-11BA-4FAD-9D75-6630847F3A9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48214F02-11BA-4FAD-9D75-6630847F3A9B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
