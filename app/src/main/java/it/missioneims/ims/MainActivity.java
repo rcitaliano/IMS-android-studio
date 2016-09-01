@@ -1,6 +1,8 @@
 package it.missioneims.ims;
 
+import android.app.ProgressDialog;
 import android.database.DataSetObserver;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -23,10 +25,20 @@ import android.view.ViewStub;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -136,14 +148,13 @@ public class MainActivity extends AppCompatActivity {
                     textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
                     break;
                 case 2:
-                    textView = (TextView) rootView.findViewById(R.id.section_label);
-                    textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+                    CreateEventsView(rootView);
                     break;
                 case 3:
                     CreateMembersView(rootView);
                     break;
                 case 4:
-                    CreateContactView(rootView);
+                    //CreateContactView(rootView);
                     break;
                 default:
                     textView = (TextView) rootView.findViewById(R.id.section_label);
@@ -156,6 +167,125 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
+        private void CreateEventsView(View rootView) {
+
+            /*WebRequest request = new WebRequest();
+            String response = request.makeWebServiceCall("http://localhost:57460/api/events", WebRequest.GETRequest);
+            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
+            textView.setText(response);
+            */
+
+            // Calling async task to get json
+            GetEvents events = new GetEvents();
+            events.rootView = rootView;
+            events.execute();
+        }
+
+        // URL to get contacts JSON
+        private static String eventsurl = "http://192.168.1.6:57460/api/events";
+
+        // JSON Node names
+        private static final String TAG_EVENTINFO = "eventsinfo";
+        private static final String TAG_ID = "Id";
+        private static final String TAG_TITLE = "Title";
+        private static final String TAG_DESCRIPTION = "Description";
+        private static final String TAG_IMAGEURL = "ImageURL";
+
+
+        private ArrayList<HashMap<String, String>> ParseJSON(String json) throws JSONException {
+            if (json != null) {
+                try {
+                    // Hashmap for ListView
+                    ArrayList<HashMap<String, String>> studentList = new ArrayList<HashMap<String, String>>();
+
+                    JSONArray students = new JSONArray(json);
+
+                    // looping through All Students
+                    for (int i = 0; i < students.length(); i++) {
+                        JSONObject c = students.getJSONObject(i);
+
+                        String id = c.getString(TAG_ID);
+                        String name = c.getString(TAG_TITLE);
+                        String email = c.getString(TAG_DESCRIPTION);
+                        String address = c.getString(TAG_IMAGEURL);
+
+                        // tmp hashmap for single student
+                        HashMap<String, String> student = new HashMap<String, String>();
+
+                        // adding each child node to HashMap key => value
+                        student.put(TAG_ID, id);
+                        student.put(TAG_TITLE, name);
+                        student.put(TAG_DESCRIPTION, email);
+                        student.put(TAG_IMAGEURL, address);
+
+                        // adding student to students list
+                        studentList.add(student);
+                    }
+                    return studentList;
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            } else {
+                //Log.e("ServiceHandler", "Couldn't get any data from the url");
+                return null;
+            }
+        }
+        /**
+         * Async task class to get json by making HTTP call
+         */
+        public class GetEvents extends AsyncTask<Void, Void, Void> {
+            public View rootView;
+            // Hashmap for ListView
+            ArrayList<HashMap<String, String>> list;
+            JSONArray arrayJson;
+            @Override
+            protected Void doInBackground(Void... arg0) {
+                // Creating service handler class instance
+                WebRequest webreq = new WebRequest();
+
+                // Making a request to url and getting response
+                String jsonStr = webreq.makeWebServiceCall(eventsurl, WebRequest.GETRequest);
+
+
+                try {
+                    list = ParseJSON(jsonStr);
+                    arrayJson = new JSONArray(jsonStr);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void result) {
+                super.onPostExecute(result);
+                /*
+                // Dismiss the progress dialog
+                if (pDialog.isShowing())
+                    pDialog.dismiss();
+
+                ListAdapter adapter = new SimpleAdapter(
+                        getActivity(), list,
+                        R.layout.events_list, new String[]{TAG_TITLE, TAG_DESCRIPTION,TAG_IMAGEURL},
+                                            new int[]{R.id.txtTitle,R.id.txtDescription, R.id.txtImageUrl});*/
+                ListView eventList = (ListView) rootView.findViewById(R.id.eventsListView);
+                JSONObject[] jsonObjects = new JSONObject[arrayJson.length()];
+                for (int i = 0; i < arrayJson.length(); i++)
+                {
+                    try {
+                        jsonObjects[i] = arrayJson.getJSONObject(i);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                EventsAdapter adapter= new EventsAdapter(getActivity(), R.layout.events_list,jsonObjects);
+                eventList.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
+            }
+
+        }
         private void CreateMembersView(View rootView) {
             ListView membersList = (ListView) rootView.findViewById(R.id.membersListView);
             if (membersList != null) {
